@@ -1,6 +1,6 @@
 
 require("dotenv").config();
-const { Client, GatewayIntentBits, EmbedBuilder, AuditLogEvent } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, AuditLogEvent } = require("discord.js");
 
 const client = new Client({
   intents: [
@@ -9,17 +9,16 @@ const client = new Client({
   ]
 });
 
-// ⚠️ TOKENは.envなどから読み込む
 const TOKEN = process.env.TOKEN;
 
 // ログチャンネルID
-const LOG_CHANNEL = "1481278589067333834";
+const LOG_CHANNEL = "ログチャンネルID";
 
-client.once('ready', () => {
+client.once("ready", () => {
   console.log(`ログイン成功: ${client.user.tag}`);
 });
 
-client.on('guildMemberRemove', async member => {
+client.on("guildMemberRemove", async (member) => {
 
   const channel = member.guild.channels.cache.get(LOG_CHANNEL);
   if (!channel) return;
@@ -74,9 +73,7 @@ client.on('guildMemberRemove', async member => {
           `${member.user.tag} が **${executor ? executor.tag : "不明"}** にBANされました`
         );
 
-    }
-
-    else if (action === "kick") {
+    } else if (action === "kick") {
 
       embed
         .setTitle("👢 メンバーキック")
@@ -84,9 +81,7 @@ client.on('guildMemberRemove', async member => {
           `${member.user.tag} が **${executor ? executor.tag : "不明"}** にキックされました`
         );
 
-    }
-
-    else {
+    } else {
 
       embed
         .setTitle("🚪 メンバー脱退")
@@ -99,7 +94,7 @@ client.on('guildMemberRemove', async member => {
     try {
       await channel.send({ embeds: [embed] });
     } catch (err) {
-      console.log("メッセージ送信エラー:", err);
+      console.log("送信エラー:", err);
     }
 
   }, 3000);
