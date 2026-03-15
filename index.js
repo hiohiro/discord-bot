@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const { Client, GatewayIntentBits, EmbedBuilder, AuditLogEvent } = require("discord.js");
 
@@ -10,11 +9,9 @@ const client = new Client({
 });
 
 const TOKEN = process.env.TOKEN;
-
-// ログチャンネルID
 const LOG_CHANNEL = "ログチャンネルID";
 
-client.once("ready", () => {
+client.once("clientReady", () => {
   console.log(`ログイン成功: ${client.user.tag}`);
 });
 
@@ -30,7 +27,6 @@ client.on("guildMemberRemove", async (member) => {
 
     try {
 
-      // BANチェック
       const banLogs = await member.guild.fetchAuditLogs({
         limit: 1,
         type: AuditLogEvent.MemberBanAdd
@@ -43,7 +39,6 @@ client.on("guildMemberRemove", async (member) => {
         executor = banEntry.executor;
       }
 
-      // Kickチェック
       const kickLogs = await member.guild.fetchAuditLogs({
         limit: 1,
         type: AuditLogEvent.MemberKick
@@ -66,36 +61,21 @@ client.on("guildMemberRemove", async (member) => {
       .setTimestamp();
 
     if (action === "ban") {
-
-      embed
-        .setTitle("🔨 メンバーBAN")
-        .setDescription(
-          `${member.user.tag} が **${executor ? executor.tag : "不明"}** にBANされました`
-        );
-
-    } else if (action === "kick") {
-
-      embed
-        .setTitle("👢 メンバーキック")
-        .setDescription(
-          `${member.user.tag} が **${executor ? executor.tag : "不明"}** にキックされました`
-        );
-
-    } else {
-
-      embed
-        .setTitle("🚪 メンバー脱退")
-        .setDescription(
-          `${member.user.tag} がサーバーを脱退しました`
-        );
-
+      embed.setTitle("🔨 メンバーBAN")
+      .setDescription(`${member.user.tag} が **${executor ? executor.tag : "不明"}** にBANされました`);
     }
 
-    try {
-      await channel.send({ embeds: [embed] });
-    } catch (err) {
-      console.log("送信エラー:", err);
+    else if (action === "kick") {
+      embed.setTitle("👢 メンバーキック")
+      .setDescription(`${member.user.tag} が **${executor ? executor.tag : "不明"}** にキックされました`);
     }
+
+    else {
+      embed.setTitle("🚪 メンバー脱退")
+      .setDescription(`${member.user.tag} がサーバーを脱退しました`);
+    }
+
+    channel.send({ embeds: [embed] });
 
   }, 3000);
 
