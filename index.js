@@ -9,7 +9,7 @@ const client = new Client({
 });
 
 const TOKEN = process.env.TOKEN;
-const LOG_CHANNEL = "ログチャンネルID";
+const LOG_CHANNEL = "1481278589067333834";
 
 client.once("clientReady", () => {
   console.log(`ログイン成功: ${client.user.tag}`);
